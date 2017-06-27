@@ -1,0 +1,154 @@
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"> 
+<html>
+	<head>
+		<style>
+			p { 
+				height:100%;
+				width:100%;
+				font-size:20vmin;
+			}
+
+			button { 
+				height:100%;
+				width:100%;
+			}
+
+			tr.word { 
+				height:40%;
+				width:100%;
+			}
+
+			tr.button { 
+				height:10%;
+				width:100%;
+			}
+
+
+		</style>
+		<script language="javascript">
+			function initialize() {
+				// Populate dictionary dropdown
+				getDictionaryList();
+				
+				// Get first word
+				getNewWord();
+			}
+			
+			function getNewWord() {
+				//Get new word
+				var xhttp = new XMLHttpRequest();
+				xhttp.open("POST", "http://"+window.location.host+"/cgi-bin/RandomWord.py", false);
+				xhttp.setRequestHeader("Accept","application/json");
+				xhttp.overrideMimeType('text/xml; charset=iso-8859-1');
+				//xhttp.setRequestHeader("Access-Control-Allow-Origin","*")
+				xhttp.onload=function() {
+					if (xhttp.status === 200) {
+						console.log(this.responseText)
+						var json=JSON.parse(this.responseText);
+						console.log(json)
+						updateNewWord(json.frenchword,json.englishword,json.confidence)
+					} else {
+						alert('An error occurred\nUse the browsers Developer Tools to inspect headers.');
+					}
+				}
+				xhttp.send();
+			}
+			
+			function updateNewWord(french,english,confidence) {
+				var display=document.getElementById("displayword")
+				var hidden=document.getElementById("hiddenword")
+				
+				//Logic based on confidence which word to show/hide
+				if (confidence=="1") {
+					display.innerHTML=french
+					display.style.color="brown";
+					hidden.innerHTML=english
+					hidden.style.color="black";
+				} else {
+					display.innerHTML=english
+					display.style.color="black";
+					hidden.innerHTML=french
+					hidden.style.color="brown";
+				}
+				
+				hidden.style.display="none";
+				
+				var wrong=document.getElementById("Wrong")
+				var right=document.getElementById("Right")
+				var wrongConfidence=confidence
+				var rightConfidence=confidence
+				if (confidence==1) {
+					rightConfidence=2
+				} else if (confidence==2) {
+					wrongConfidence=1
+					rightConfidence=3
+				} else if (confidence==3) {
+					wrongConfidence=2
+				}
+				wrong.onclick= function() { updateWord(wrongConfidence,french); }
+				right.onclick= function() { updateWord(rightConfidence,french); }
+			}
+			
+			function getDictionaryList() {
+				var select=document.getElementById("dictionary");
+				//Get list of dictionary options
+				var options = ["Saison 1", "Saison 2", "Saison 3", "Random"]; 
+
+				for(i = 0; i < options.length; i++) {
+					var dict = options[i];
+					var option = document.createElement("option");
+					option.textContent = dict;
+					option.value = dict;
+					select.appendChild(option);
+				}
+			}
+		
+			function showHidden() {
+                		word=document.getElementById('hiddenword')
+                		word.style.display=''
+			}
+			
+			function updateWord(val,word) {
+				//alert('Word: '+word+' was '+val);
+				// Send request of word with val
+				var xhttp = new XMLHttpRequest();
+				var url="http://"+window.location.host+"/cgi-bin/UpdateWord.py?FrenchWord="+word+"&Confidence="+val
+				xhttp.open("POST", url, true);
+				xhttp.setRequestHeader("Accept","application/json");
+				//xhttp.overrideMimeType('text/xml; charset=iso-8859-1');
+				//xhttp.setRequestHeader("Access-Control-Allow-Origin","*")
+				xhttp.send();
+				
+				getNewWord();
+			}
+		</script>
+	</head>
+	<body onload="initialize();">
+		<select id="dictionary"></select>
+		<table style="width:100%;height:95%;">
+			<tr class="word">
+				<td colspan="2">
+					<p id='displayword' style='color:brown;'></p>
+				</td>
+			</tr>
+			<tr class="word">
+				<td colspan="2">
+					<p id='hiddenword' style='color:white'></p>
+				</td>
+			</tr>
+			<tr class="button">
+				<td colspan="2">
+					<button id="Show" onclick="showHidden();">Show</button>
+				</td>
+			</tr>
+			<tr class="button">
+				<td>
+					<button id="Wrong" onclick="updateWord('Wrong','<word>');" width="100%">Wrong</button>
+				</td>
+				<td>
+					<button id="Right" onclick="updateWord('Right','<word>');" width="100%">Right</button>
+				</td>
+			</tr>
+		</table>
+	</body>
+</html>
