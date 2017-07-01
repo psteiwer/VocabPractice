@@ -1,0 +1,57 @@
+<meta http-equiv="Content-Type" content="text/html;charset=ISO-8859-1"> 
+<html>
+	<head>
+		<script language="javascript">
+			
+			
+			function initialize() {
+				var french=document.getElementById("french")
+				var english=document.getElementById("english")
+				var dictionary=document.getElementById("dictionary")
+				french.value=""
+				english.value=""
+				dictionary.value=""
+				
+			}
+		
+			function addWord() {
+				var french=document.getElementById("french")
+				var english=document.getElementById("english")
+				var dictionary=document.getElementById("dictionary")
+				var missing=false
+				if (french.value=="") {
+					missing=true
+				}
+				if (english.value=="") {
+					missing=true
+				}
+				if (dictionary.value=="") {
+					missing=true
+				}
+				if (missing) {
+					alert("Value(s) missing")
+					return
+				}
+				// Send request of word with val
+				var xhttp = new XMLHttpRequest();
+				var url="http://"+window.location.host+"/cgi-bin/UpdateWord.py?FrenchWord="+french.value+"&EnglishWord="+english.value+"&Dictionary="+dictionary.value
+				xhttp.open("POST", url, true);
+				xhttp.setRequestHeader("Accept","application/json");
+				//xhttp.overrideMimeType('text/xml; charset=iso-8859-1');
+				//xhttp.setRequestHeader("Access-Control-Allow-Origin","*")
+				xhttp.send();
+
+				// Clear for a new word
+				french.value=""
+				english.value=""
+				dictionary.value=""
+			}
+		</script>
+    </head>
+    <body onload="initialize();">
+	<input id="french" type="text"/>
+	<input id="english" type="text"/>
+	<input id="dictionary" type="text"/>
+	<button onclick="addWord();">Add</button>
+    </body>
+</html>
