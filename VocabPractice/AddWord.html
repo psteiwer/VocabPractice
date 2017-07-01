@@ -2,8 +2,6 @@
 <html>
 	<head>
 		<script language="javascript">
-			
-			
 			function initialize() {
 				var french=document.getElementById("french")
 				var english=document.getElementById("english")
@@ -49,9 +47,20 @@
 		</script>
     </head>
     <body onload="initialize();">
-	<input id="french" type="text"/>
-	<input id="english" type="text"/>
-	<input id="dictionary" type="text"/>
-	<button onclick="addWord();">Add</button>
+    	<table>
+    		<tr>
+    			<th>French</th>
+    			<th>English</th>
+    			<th>Dictionary</th>
+    		</tr>
+    		<tr>
+				<td><input id="french" type="text"/></td>
+				<td><input id="english" type="text"/></td>
+				<td><input id="dictionary" type="text"/></td>
+			</tr>
+			<tr>
+				<td colspan="3"><button onclick="addWord();">Add</button></td>
+			</tr>
+		</table>
     </body>
 </html>
