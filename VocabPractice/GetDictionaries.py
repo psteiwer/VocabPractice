@@ -20,9 +20,9 @@ json = """
 for rs in cur.fetchall():
 	if counter>0:
 		json=json+","
-    json=json+"""
-    \"Counter"""+str(counter)+"""\": \""""+str(rs[0])+"""\""""
-    counter+=1 
+	json=json+"""
+	\"Counter"""+str(counter)+"""\": \""""+str(rs[0])+"""\""""
+	counter+=1 
 
 json=json+"""
 }"""
