@@ -12,7 +12,7 @@ table=f.readline()
 db=MySQLdb.connect(host,user,pw,table)
 cur=db.cursor()
 
-cur.execute("SELECT distinct Source FROM Words)
+cur.execute("SELECT distinct Source FROM Words")
 
 counter=0
 json = """
