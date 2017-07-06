@@ -19,7 +19,8 @@ json = """
 {"""
 for rs in cur.fetchall():
     json=json+"""
-    \"Counter"""+counter+"""\": \""""+rs[0]+"""\",""" 
+    \"Counter"""+str(counter)+"""\": \""""+str(rs[0])+"""\","""
+    counter+=1 
 
 json=json+"""
 }"""
